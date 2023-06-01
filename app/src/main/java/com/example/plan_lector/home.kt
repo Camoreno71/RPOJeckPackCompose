@@ -69,7 +69,7 @@ fun Index(name: String, navigationController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             buttonLabels.forEach { label ->
-                Button(onClick = { /*TODO*/ },
+                Button(onClick = { navigationController.navigate(label) },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = backgroundColor
                     )) {
