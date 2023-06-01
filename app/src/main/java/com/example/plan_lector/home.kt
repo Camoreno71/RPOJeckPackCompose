@@ -37,7 +37,7 @@ import com.example.plan_lector.ui.theme.Plan_lectorTheme
 
 @Composable
 fun Index(name: String, navigationController: NavHostController) {
-    val buttonLabels = listOf("Juegos", "Música", "Películas", "Tecnologías")
+    val buttonLabels = listOf("Juegos", "Música", "Películas", "Tecnologías", "Lugares")
 
     val buttonThemes = mapOf(
         "Juegos" to Color.Red,
