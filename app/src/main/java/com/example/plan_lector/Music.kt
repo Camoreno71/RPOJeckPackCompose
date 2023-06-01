@@ -88,6 +88,6 @@ fun musicIndex(navigationController: NavHostController){
 @Composable
 fun MusicPreview() {
     Plan_lectorTheme {
-        movieIndex(rememberNavController())
+        musicIndex(rememberNavController())
     }
 }
