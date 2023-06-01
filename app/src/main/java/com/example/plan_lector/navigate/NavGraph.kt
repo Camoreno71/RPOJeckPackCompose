@@ -9,6 +9,8 @@ import com.example.plan_lector.Greeting
 import com.example.plan_lector.Index
 import com.example.plan_lector.gameIndex
 import com.example.plan_lector.movieIndex
+import com.example.plan_lector.musicIndex
+import com.example.plan_lector.placesIndex
 import com.example.plan_lector.technologyIndex
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,6 +31,12 @@ fun AppNavigation(navigationController: NavHostController) {
         }
         composable(Route.Screen4.route) {
             movieIndex(navigationController)
+        }
+        composable(Route.Screen5.route) {
+            musicIndex(navigationController)
+        }
+        composable(Route.Screen6.route) {
+            placesIndex(navigationController)
         }
         /*
         composable(
