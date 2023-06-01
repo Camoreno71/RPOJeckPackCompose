@@ -1,12 +1,17 @@
 package com.example.plan_lector.navigate
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.plan_lector.Greeting
 import com.example.plan_lector.Index
+import com.example.plan_lector.gameIndex
+import com.example.plan_lector.movieIndex
+import com.example.plan_lector.technologyIndex
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(navigationController: NavHostController) {
     NavHost(navController = navigationController, startDestination = Route.Index.route) {
@@ -16,16 +21,16 @@ fun AppNavigation(navigationController: NavHostController) {
                 navigationController = navigationController
             )
         }
-        /*
         composable(Route.Screen2.route) {
-            SRecycler1(navigationController)
+            technologyIndex(navigationController)
         }
         composable(Route.Screen3.route) {
-            SRecycler2(navigationController)
+            gameIndex(navigationController)
         }
         composable(Route.Screen4.route) {
-            SRecyclerHorses(navigationController)
+            movieIndex(navigationController)
         }
+        /*
         composable(
             Route.Detail.route,
             arguments = listOf(navArgument("id") { type = NavType.IntType })
