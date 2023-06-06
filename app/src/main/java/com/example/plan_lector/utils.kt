@@ -1,7 +1,9 @@
 package com.example.plan_lector
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,9 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -19,6 +23,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.twotone.Person
 import androidx.compose.material.icons.twotone.MoreVert
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
@@ -52,10 +57,15 @@ import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import kotlinx.coroutines.launch
 
 @Composable
-fun itemView(item: Item, isDetail: Boolean) {
+fun itemView(item: Item, isDetail: Boolean, function: ((Item) -> Unit)? = null) {
+    Log.d("ItemView", item.description)
     Card(
         modifier = Modifier
-            .padding(16.dp).fillMaxWidth(),
+            .padding(16.dp).fillMaxWidth().clickable {
+                if (function != null) {
+                    function(item)
+                }
+            },
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -63,7 +73,8 @@ fun itemView(item: Item, isDetail: Boolean) {
             Image(
                 painter = painterResource(id = item.photo),
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                modifier = Modifier.fillMaxWidth().heightIn(max = 430.dp)
+                    .widthIn(max = 400.dp),
                 contentScale = ContentScale.Crop
             )
             TextWithIcon(
@@ -125,7 +136,7 @@ fun TextWithIcon(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
 @Composable
-fun itemIndex(navigationController: NavHostController, itemList: List<Item>, isDetail: Boolean = false){
+fun itemIndex(navigationController: NavHostController, itemList: List<Item>, isDetail: Boolean = false, listName: String){
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -160,13 +171,37 @@ fun itemIndex(navigationController: NavHostController, itemList: List<Item>, isD
                 item {
                     Spacer(modifier = Modifier.height(50.dp))
                 }
-                itemsIndexed(itemList) { index, item ->
-                    itemView(item, isDetail)
+                items(itemList) {
+                    itemView(it, isDetail) {
+                        navigationController.navigate(Route.Detail.showDetail(it.id, listName))
+                    }
                 }
 
             }
         }
     )
+}
+
+@Composable
+fun itemDetail(id: Int, listName: String){
+    val itemList = when (listName) {
+        "games" -> getGames()
+        "technology" -> getTechnologies()
+        "movies" -> getMovies()
+        "song" -> getMusic()
+        "places" -> getPlaces()
+        else -> throw IllegalArgumentException("Invalid listName: $listName")
+    }
+    val item =  itemList.find { it.id == id }
+    val defaultItem = Item(
+        id = 0,
+        name = "Default Name",
+        description = "Default Description",
+        photo = R.drawable.adventure_logo,
+        whereAppear = "Default Where Appear"
+    )
+    Log.d("ItemView", listName)
+    itemView(item ?: defaultItem,  true)
 }
 
 @Composable

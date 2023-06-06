@@ -7,8 +7,8 @@ sealed class Route(val route:String) {
     object Screen4:Route("Películas")
     object Screen5:Route("Musica")
     object Screen6:Route("Lugares")
-    object Detail:Route("detail/{id}"){
-        fun showDetail(id:Int)= "detail/$id"
+    object Detail:Route("detail/{id}/{list}"){
+        fun showDetail(id:Int, list: String)= "detail/$id/$list"
     }
 }
 

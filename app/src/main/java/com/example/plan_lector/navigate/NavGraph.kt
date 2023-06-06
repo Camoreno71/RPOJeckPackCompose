@@ -3,11 +3,14 @@ package com.example.plan_lector.navigate
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.plan_lector.Greeting
 import com.example.plan_lector.Index
 import com.example.plan_lector.gameIndex
+import com.example.plan_lector.itemDetail
 import com.example.plan_lector.movieIndex
 import com.example.plan_lector.musicIndex
 import com.example.plan_lector.placesIndex
@@ -38,6 +41,17 @@ fun AppNavigation(navigationController: NavHostController) {
         composable(Route.Screen6.route) {
             placesIndex(navigationController)
         }
+        composable(
+            Route.Detail.route,
+            arguments = listOf(
+                navArgument("id") { type = NavType.IntType },
+                navArgument("list") { type = NavType.StringType })
+        ) { navBackStackEntry ->
+            val id = navBackStackEntry.arguments?.getInt("id") ?: 0
+            val list = navBackStackEntry.arguments?.getString("list") ?: ""
+
+            itemDetail(id, list) }
+
         /*
         composable(
             Route.Detail.route,

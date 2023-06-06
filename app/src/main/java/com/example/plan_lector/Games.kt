@@ -14,7 +14,7 @@ import com.example.plan_lector.ui.theme.Plan_lectorTheme
 fun gameIndex(navigationController: NavHostController){
     val gameList = getGames()
 
-    itemIndex(navigationController,gameList)
+    itemIndex(navigationController,gameList, listName = "games")
 }
 
 

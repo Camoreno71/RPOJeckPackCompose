@@ -14,7 +14,7 @@ import com.example.plan_lector.ui.theme.Plan_lectorTheme
 fun musicIndex(navigationController: NavHostController){
     val songList = getMusic()
 
-    itemIndex(navigationController,songList)
+    itemIndex(navigationController,songList, listName = "song")
 }
 
 
