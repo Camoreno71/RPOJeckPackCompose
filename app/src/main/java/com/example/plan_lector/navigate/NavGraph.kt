@@ -7,14 +7,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.plan_lector.Greeting
-import com.example.plan_lector.Index
-import com.example.plan_lector.gameIndex
-import com.example.plan_lector.itemDetail
-import com.example.plan_lector.movieIndex
-import com.example.plan_lector.musicIndex
-import com.example.plan_lector.placesIndex
-import com.example.plan_lector.technologyIndex
+import com.example.plan_lector.screens.Index
+import com.example.plan_lector.screens.aboutMeIndex
+import com.example.plan_lector.screens.gameIndex
+import com.example.plan_lector.utils.itemDetail
+import com.example.plan_lector.screens.movieIndex
+import com.example.plan_lector.screens.musicIndex
+import com.example.plan_lector.screens.placesIndex
+import com.example.plan_lector.screens.technologyIndex
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +40,9 @@ fun AppNavigation(navigationController: NavHostController) {
         }
         composable(Route.Screen6.route) {
             placesIndex(navigationController)
+        }
+        composable(Route.Screen7.route) {
+            aboutMeIndex(navigationController)
         }
         composable(
             Route.Detail.route,

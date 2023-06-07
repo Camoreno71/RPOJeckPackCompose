@@ -1,6 +1,7 @@
-package com.example.plan_lector
+package com.example.plan_lector.utils
 
 import androidx.annotation.DrawableRes
+import com.example.plan_lector.R
 
 data class Item(val id: Int, val name:String, val description:String,val whereAppear:String, @DrawableRes val photo:Int)
 

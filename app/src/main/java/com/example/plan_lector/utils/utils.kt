@@ -1,4 +1,4 @@
-package com.example.plan_lector
+package com.example.plan_lector.utils
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -17,12 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.twotone.Person
-import androidx.compose.material.icons.twotone.MoreVert
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
@@ -53,7 +49,7 @@ import androidx.navigation.NavHostController
 import com.example.plan_lector.navigate.Route
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
+import com.example.plan_lector.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -232,7 +228,8 @@ fun SBottomBar(navController: NavHostController) {
     val items = listOf(
         Route.Screen2,
         Route.Screen3,
-        Route.Screen4
+        Route.Screen4,
+        Route.Screen7
     )
     BottomAppBar(Modifier.padding(top = 100.dp)) {
         var index by remember { mutableStateOf(0) }
