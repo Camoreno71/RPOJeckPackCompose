@@ -17,7 +17,7 @@ import com.example.plan_lector.ui.theme.Plan_lectorTheme
 fun placesIndex(navigationController: NavHostController){
     val placeList = getPlaces()
 
-    itemIndex(navigationController,placeList, listName = "places")
+     itemIndex(navigationController,placeList, listName = "Lugares", isOdd = true)
 }
 
 

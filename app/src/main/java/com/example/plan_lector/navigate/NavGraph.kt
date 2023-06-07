@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.plan_lector.screens.Index
+import com.example.plan_lector.screens.NarutoCharacterGrid
 import com.example.plan_lector.screens.aboutMeIndex
 import com.example.plan_lector.screens.gameIndex
 import com.example.plan_lector.utils.itemDetail
@@ -22,7 +23,6 @@ fun AppNavigation(navigationController: NavHostController) {
     NavHost(navController = navigationController, startDestination = Route.Index.route) {
         composable(Route.Index.route) {
             Index(
-                name = "sigmotoa",
                 navigationController = navigationController
             )
         }
@@ -44,6 +44,9 @@ fun AppNavigation(navigationController: NavHostController) {
         composable(Route.Screen7.route) {
             aboutMeIndex(navigationController)
         }
+        composable(Route.Screen9.route) {
+            NarutoCharacterGrid(navigationController)
+        }
         composable(
             Route.Detail.route,
             arguments = listOf(
@@ -53,7 +56,7 @@ fun AppNavigation(navigationController: NavHostController) {
             val id = navBackStackEntry.arguments?.getInt("id") ?: 0
             val list = navBackStackEntry.arguments?.getString("list") ?: ""
 
-            itemDetail(id, list) }
+            itemDetail(id, list, navigationController) }
 
         /*
         composable(

@@ -16,7 +16,7 @@ import com.example.plan_lector.ui.theme.Plan_lectorTheme
 fun movieIndex(navigationController: NavHostController){
     val movieList = getMovies()
 
-    itemIndex(navigationController,movieList, listName = "movies")
+    itemIndex(navigationController,movieList, listName = "Peliculas", isOdd = true)
 }
 
 

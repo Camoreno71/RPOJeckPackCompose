@@ -1,22 +1,25 @@
 package com.example.plan_lector.screens
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -35,15 +38,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.plan_lector.R
@@ -54,82 +52,19 @@ import com.example.plan_lector.utils.SMenu
 import kotlinx.coroutines.launch
 
 
-
-@Composable
-fun aboutMeView() {
-    val context = LocalContext.current
-
-    Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 100.dp, top = 100.dp)
-        ) {
-            item {
-                Image(
-                    painter = painterResource(id = R.drawable.carlos_photo),
-                    contentDescription = "Foto",
-                    modifier = Modifier.size(200.dp).clip(shape = CircleShape)
-                )
-            }
-            item {
-                Text(
-                    text = "Carlos Arturo Moreno Cordoba",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                )
-            }
-            item {
-                Text(
-                    text = "GitHub",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    ),
-                    color = Color.Blue,
-                    modifier = Modifier.clickable {
-                        val uri = Uri.parse("https://github.com/Camoreno71")
-                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                        context.startActivity(intent)
-                    }
-                )
-            }
-            item {
-                Text(
-                    text = "Información",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                )
-            }
-            item {
-                Text(
-                    text = "Ingeniero de sistemas y computación con conocimiento y experiencia en desarrollo de software backend y frontend, en lenguajes como python por medio de frameworks como Django y Django Restframework, y javascript mediante frameworks tales como ReactJs. Manejo de bases de datos relacionales (PostgreSQL y Oracle) y no relacionales. Conocimiento en trabajo colaborativo por control de versiones por medio de git.",
-                    textAlign = TextAlign.Center
-                )
-            }
-            item {
-                Text(
-                    text = "Experiencia: 1 año (Desarrollador fullStack)",
-                    textAlign = TextAlign.Center,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                )
-            }
-        }
-    }
-}
-
-
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@ExperimentalMaterial3Api
 @Composable
-fun aboutMeIndex(navigationController: NavHostController){
+fun NarutoCharacterGrid(navigationController: NavHostController) {
+    val characters = listOf(
+        Character(R.drawable.naruto, "naruto"),
+        Character(R.drawable.sasuke, "sasuke"),
+        Character(R.drawable.sakura, "sakura"),
+        Character( R.drawable.kakashi, "kakashi"),
+        Character( R.drawable.shikamaru, "Shikamaru"),
+        Character(R.drawable.rock_lee, "Rock lee")
+    )
+
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -138,9 +73,8 @@ fun aboutMeIndex(navigationController: NavHostController){
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    // Acción al hacer clic en el FAB
                     scope.launch {
-                        snackbarHostState.showSnackbar("Desarrollador")
+                        snackbarHostState.showSnackbar("Actividad Grid")
                     }
                 }
             ) {
@@ -152,7 +86,7 @@ fun aboutMeIndex(navigationController: NavHostController){
         },
         topBar = {
             TopAppBar(
-                title = { Text(text = "Desarrollador") },
+                title = { Text(text = "Actividad Grid") },
                 actions = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         var isMenuOpen by remember {
@@ -185,15 +119,55 @@ fun aboutMeIndex(navigationController: NavHostController){
         },
         bottomBar = {  SBottomBar(navigationController) },
         content = {
-            aboutMeView()
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(16.dp),
+                modifier = Modifier.padding(top = 40.dp)
+
+            ) {
+                itemsIndexed(characters) { _, character ->
+                    CharacterCard(character = character)
+                }
+            }
         }
     )
+
 }
 
+@Composable
+fun CharacterCard(character: Character) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .aspectRatio(1f)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Image(
+                painter = painterResource(id = character.photo),
+                contentDescription = character.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .height(120.dp)
+                    .clip(shape = RoundedCornerShape(4.dp))
+            )
+        }
+    }
+}
+
+data class Character(val photo: Int, val name:String)
+
+
+
+@ExperimentalMaterial3Api
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun aboutMePreview(){
+fun GridPreview(){
     Plan_lectorTheme {
-        aboutMeIndex( rememberNavController())
+        NarutoCharacterGrid( rememberNavController())
     }
 }

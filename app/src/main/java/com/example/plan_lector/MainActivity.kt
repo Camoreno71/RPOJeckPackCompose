@@ -40,6 +40,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     Plan_lectorTheme {
-        Index("Android", rememberNavController())
+        Index( rememberNavController())
     }
 }

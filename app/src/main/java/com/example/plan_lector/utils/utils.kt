@@ -1,6 +1,7 @@
 package com.example.plan_lector.utils
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,15 +21,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.twotone.Person
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -49,6 +55,7 @@ import androidx.navigation.NavHostController
 import com.example.plan_lector.navigate.Route
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavController
 import com.example.plan_lector.R
 import kotlinx.coroutines.launch
 
@@ -132,15 +139,134 @@ fun TextWithIcon(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @ExperimentalMaterial3Api
 @Composable
-fun itemIndex(navigationController: NavHostController, itemList: List<Item>, isDetail: Boolean = false, listName: String){
+fun itemIndex(navigationController: NavHostController, itemList: List<Item>, isDetail: Boolean = false, listName: String, isOdd: Boolean = false){
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    // Acción al hacer clic en el FAB (redirigir a otra pantalla)
+                    if (isOdd) {
+                        navigationController.navigate(Route.Index.route)
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(listName)
+                        }
+
+                    }
+                },
+            ) {
+                Icon(imageVector = if (isOdd) Icons.Default.Home else Icons.Default.Info,
+                    contentDescription = "Icono")
+            }
+        },
         topBar = {
             TopAppBar(
-                title = { Text(text = "Plan lector") },
+                title = { Text(text = listName) },
+                actions = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        var isMenuOpen by remember {
+                            mutableStateOf(false)
+                        }
+                        IconButton(onClick = { isMenuOpen = true }) {
+                            Icon(
+                                imageVector = Icons.Outlined.MoreVert,
+                                contentDescription = null
+                            )
+                        }
+                        if (!isOdd) {
+                            IconButton(onClick = {
+                                // Acción al hacer clic en el icono (volver a home)
+                                navigationController.navigate(Route.Index.route)
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Home,
+                                    contentDescription = "Volver a Home"
+                                )
+                            }
+                        }
+                        SMenu(isMenuOpen, navigationController, itemClick = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(it)
+                            }
+                        }) { isMenuOpen = false }
+                    }
+                },
+            )
+        },
+        bottomBar = {  SBottomBar(navigationController, isOdd) },
+        content = {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 100.dp)) {
+                item {
+                    Spacer(modifier = Modifier.height(50.dp))
+                }
+                items(itemList) {
+                    itemView(it, isDetail) {
+                        navigationController.navigate(Route.Detail.showDetail(it.id, listName))
+                    }
+                }
+
+            }
+        }
+    )
+}
+
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun itemDetail(id: Int, listName: String, navigationController: NavHostController){
+    val itemList = when (listName) {
+        "Juegos" -> getGames()
+        "Tecnologia" -> getTechnologies()
+        "Peliculas" -> getMovies()
+        "Musica" -> getMusic()
+        "Lugares" -> getPlaces()
+        else -> throw IllegalArgumentException("Invalid listName: $listName")
+    }
+    val isOdd = when (listName) {
+        "Tecnologia", "Peliculas", "Lugares" -> true
+        else -> false
+    }
+    val item =  itemList.find { it.id == id }
+    val defaultItem = Item(
+        id = 0,
+        name = "Default Name",
+        description = "Default Description",
+        photo = R.drawable.adventure_logo,
+        whereAppear = "Default Where Appear"
+    )
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    // Acción al hacer clic en el FAB (redirigir a otra pantalla)
+                    if (isOdd) {
+                        navigationController.navigate(Route.Index.route)
+                    } else {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(listName)
+                        }
+
+                    }
+                },
+            ) {
+                Icon(imageVector = if (isOdd) Icons.Default.Home else Icons.Default.Info,
+                    contentDescription = "Icono")
+            }
+        },
+        topBar = {
+            TopAppBar(
+                title = { Text(text = listName) },
                 actions = {
                     var isMenuOpen by remember {
                         mutableStateOf(false)
@@ -161,43 +287,15 @@ fun itemIndex(navigationController: NavHostController, itemList: List<Item>, isD
 
                 )
         },
-        bottomBar = {  SBottomBar(navigationController) },
+        bottomBar = {  SBottomBar(navigationController, isOdd) },
         content = {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 100.dp)) {
-                item {
-                    Spacer(modifier = Modifier.height(50.dp))
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top = 50.dp)) {
+                items(listOf(item ?: defaultItem)) { item ->
+                    itemView(item, true)
                 }
-                items(itemList) {
-                    itemView(it, isDetail) {
-                        navigationController.navigate(Route.Detail.showDetail(it.id, listName))
-                    }
-                }
-
             }
         }
     )
-}
-
-@Composable
-fun itemDetail(id: Int, listName: String){
-    val itemList = when (listName) {
-        "games" -> getGames()
-        "technology" -> getTechnologies()
-        "movies" -> getMovies()
-        "song" -> getMusic()
-        "places" -> getPlaces()
-        else -> throw IllegalArgumentException("Invalid listName: $listName")
-    }
-    val item =  itemList.find { it.id == id }
-    val defaultItem = Item(
-        id = 0,
-        name = "Default Name",
-        description = "Default Description",
-        photo = R.drawable.adventure_logo,
-        whereAppear = "Default Where Appear"
-    )
-    Log.d("ItemView", listName)
-    itemView(item ?: defaultItem,  true)
 }
 
 @Composable
@@ -207,7 +305,7 @@ fun SMenu(
     itemClick: (String) -> Unit,
     onClose: () -> Unit
 ) {
-    val itemsMenu = listOf(Route.Index, Route.Screen2, Route.Screen3, Route.Screen4)
+    val itemsMenu = listOf( Route.Screen7, Route.Screen9)
 
     DropdownMenu(expanded = isOpen, onDismissRequest = { onClose() }) {
         itemsMenu.forEach {
@@ -224,14 +322,21 @@ fun SMenu(
 
 
 @Composable
-fun SBottomBar(navController: NavHostController) {
-    val items = listOf(
-        Route.Screen2,
-        Route.Screen3,
-        Route.Screen4,
-        Route.Screen7
-    )
-    BottomAppBar(Modifier.padding(top = 100.dp)) {
+fun SBottomBar(navController: NavHostController, isOdd: Boolean = false) {
+    val items = if (isOdd) {
+        listOf(
+            Route.Screen3,
+            Route.Screen5,
+            // TODO: Grid activity
+        )
+    } else {
+        listOf(
+            Route.Screen2,
+            Route.Screen4,
+            Route.Screen6
+        )
+    }
+    BottomAppBar() {
         var index by remember { mutableStateOf(0) }
 
         items.forEachIndexed { i, screen ->

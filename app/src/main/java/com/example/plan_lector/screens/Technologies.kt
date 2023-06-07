@@ -16,7 +16,7 @@ import com.example.plan_lector.ui.theme.Plan_lectorTheme
 @Composable
 fun technologyIndex(navigationController: NavHostController){val technologyList = getTechnologies()
 
-    itemIndex(navigationController,technologyList, listName = "technology")
+    itemIndex(navigationController,technologyList, listName = "Tecnologia", isOdd = true)
 }
 
 
